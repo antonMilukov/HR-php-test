@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', 'HomeController@index')->name('index');
-Route::get('/temp', 'HomeController@temp')->name('temp');
-Route::get('/table-orders', 'HomeController@tableOrders')->name('table-orders');
+Route::get('/', 'Controller@index')->name('index');
+Route::get('/temp', 'Controller@temp')->name('temp');
+Route::get('/table-orders', 'Controller@tableOrders')->name('table-orders');
