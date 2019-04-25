@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index')->name('index');
+Route::get('/temp', 'HomeController@temp')->name('temp');
+Route::get('/table-orders', 'HomeController@tableOrders')->name('table-orders');
