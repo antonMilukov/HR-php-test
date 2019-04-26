@@ -27,7 +27,7 @@ class WeatherAdapterYandex implements WeatherInterface {
             $content = Cache::get($cacheKey);
         } else {
             $content = $this->getRequestData($endpoint);
-            Cache::add($cacheKey, $content, 3600);
+            Cache::put($cacheKey, $content, now()->addMinutes(30));
         }
 
         $r = null;
