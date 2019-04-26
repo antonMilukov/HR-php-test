@@ -14,3 +14,4 @@
 Route::get('/', 'Controller@index')->name('index');
 Route::get('/temp', 'Controller@temp')->name('temp');
 Route::get('/table-orders', 'Controller@tableOrders')->name('table-orders');
+Route::get('/order/{orderId}', 'Controller@orderForm')->name('order-form');
