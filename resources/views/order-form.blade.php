@@ -41,9 +41,9 @@
                                         <tr>
                                             <td>
                                                 @{{ product.name }}
-                                                <input type="hidden" v-model="product.id" :name="'products['+product.id+'][product_id]'">
+                                                <input type="hidden" v-model="product.product_id" :name="'products['+product.product_id+'][product_id]'">
                                             </td>
-                                            <td><input v-model="product.quantity" :name="'products['+product.id+'][quantity]'" type="number" min="0" class="form-control"></td>
+                                            <td><input v-model="product.quantity" :name="'products['+product.product_id+'][quantity]'" type="number" min="0" class="form-control"></td>
                                         </tr>
                                     </template>
 

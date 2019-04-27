@@ -1636,12 +1636,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             formData: {
                 partner_id: '',
-                products: [{
-                    id: 1,
-                    name: 'Продукт №1',
-                    quantity: 2,
-                    price: 100
-                }],
+                // @todo
+                products: [],
                 client_email: '',
                 status: ''
             }

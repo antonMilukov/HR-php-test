@@ -13,15 +13,7 @@
             return {
                 formData: {
                     partner_id: '',
-                    // @todo
-                    products: [
-                        {
-                            id:1,
-                            name: 'Продукт №1',
-                            quantity: 2,
-                            price: 100
-                        }
-                    ],
+                    products: [],
                     client_email: '',
                     status: '',
                 }

@@ -35,12 +35,23 @@ class Controller extends BaseController
 
     public function orderForm(Request $request)
     {
-        $order = Order::where('id', $request->orderId)->firstOrFail();
+        $order = Order::where('id', $request->orderId)->with(['partner', 'order_products', 'order_products.product'])->firstOrFail();
         $partners = Partner::all();
 
+        $orderProducts = [];
+        foreach ($order->order_products as $orderProduct){
+            $orderProducts []= [
+                'product_id' => $orderProduct->product_id,
+                'name' => $orderProduct->product->name,
+                'quantity' => $orderProduct->quantity,
+                'price' => $orderProduct->price
+            ];
+        }
         $inputAsJson = json_encode([
             'partner_id' => $order->partner_id,
-            'client_email' => $order->client_email
+            'client_email' => $order->client_email,
+            'status' => $order->satatus,
+            'products' => $orderProducts
         ]);
         return view('order-form')->with([
             'title' => 'Форма заказа',
