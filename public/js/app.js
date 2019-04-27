@@ -1636,7 +1636,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             formData: {
                 partner_id: '',
-                // @todo
                 products: [],
                 client_email: '',
                 status: ''
@@ -44716,13 +44715,6 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./resources/assets/js/script.js":
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
-
 /***/ "./resources/assets/sass/app.scss":
 /***/ (function(module, exports) {
 
@@ -44734,7 +44726,6 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__("./resources/assets/js/app.js");
-__webpack_require__("./resources/assets/js/script.js");
 module.exports = __webpack_require__("./resources/assets/sass/app.scss");
 
 

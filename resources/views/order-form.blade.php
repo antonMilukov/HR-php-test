@@ -7,15 +7,17 @@
 
                 <div class="form-group">
                     <div class="col-md-4">
-                        <label class="control-label" for="input1">email_клиента</label>
-                        <input v-model="formData.client_email" type="email" class="form-control" id="input1" name="client_email">
+                        <label class="control-label" for="input1">email_клиента <span class="required-mark">*</span></label>
+                        @php $error = $errors->has('client_email') ? 'error' : ''; @endphp
+                        <input v-model="formData.client_email" type="email" class="form-control {{ $error }}" id="input1" name="client_email">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-4">
-                        <label class="control-label" for="input1">партнер</label>
-                        <select name="partner_id" v-model="formData.partner_id" class="form-control">
+                        <label class="control-label" for="input1">партнер <span class="required-mark">*</span></label>
+                        @php $error = $errors->has('partner_id') ? 'error' : ''; @endphp
+                        <select name="partner_id" v-model="formData.partner_id" class="form-control {{ $error }}">
                             <option disabled selected value>Выберите значение</option>
                             @foreach($partners as $partner)
                                 <option value="{{ $partner->id }}">{{ $partner->name }}</option>
@@ -46,7 +48,6 @@
                                             <td><input v-model="product.quantity" :name="'products['+product.product_id+'][quantity]'" type="number" min="0" class="form-control"></td>
                                         </tr>
                                     </template>
-
                                 </tbody>
                             </table>
                         </div>
@@ -55,8 +56,9 @@
 
                 <div class="form-group">
                     <div class="col-md-4">
-                        <label class="control-label" for="input1">статус заказа</label>
-                        <select name="status" v-model="formData.status" class="form-control">
+                        <label class="control-label" for="input1">статус заказа <span class="required-mark">*</span></label>
+                        @php $error = $errors->has('status') ? 'error' : ''; @endphp
+                        <select name="status" v-model="formData.status" class="form-control {{ $error }}">
                             <option disabled selected value>Выберите значение</option>
                             @foreach(\App\Order::$statusData as $statusId => $data)
                                 <option value="{{ $statusId }}">{{ $data[\App\Order::ALIAS_TITLE] }}</option>
