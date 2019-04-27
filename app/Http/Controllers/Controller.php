@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Eloquent\Order;
+use App\Order;
+use App\Partner;
 use \Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -35,6 +36,23 @@ class Controller extends BaseController
     public function orderForm(Request $request)
     {
         $order = Order::where('id', $request->orderId)->firstOrFail();
-        return view('order-form')->with(['title' => 'Форма заказа', 'order' => $order]);
+        $partners = Partner::all();
+
+        $inputAsJson = json_encode([
+            'partner_id' => $order->partner_id,
+            'client_email' => $order->client_email
+        ]);
+        return view('order-form')->with([
+            'title' => 'Форма заказа',
+            'order' => $order,
+            'partners' => $partners,
+            'action' => route('order-form-save', ['orderId' => $order->id]),
+            'inputAsJson' => $inputAsJson
+        ]);
+    }
+
+    public function orderFormSave(Request $request)
+    {
+        dd($request->all());
     }
 }

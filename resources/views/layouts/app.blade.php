@@ -12,25 +12,27 @@
     <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="{{route('index')}}">HR PHP</a>
+    <div id="app">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{{route('index')}}">HR PHP</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="{{ ($pageName == 'temp') ? 'active': ''}}"><a href="{{route('temp')}}">Температура</a></li>
+                        <li class="{{ ($pageName == 'table-orders') ? 'active': ''}}"><a href="{{route('table-orders')}}">Заказы</a></li>
+                    </ul>
+                </div>
             </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="{{ ($pageName == 'temp') ? 'active': ''}}"><a href="{{route('temp')}}">Температура</a></li>
-                    <li class="{{ ($pageName == 'table-orders') ? 'active': ''}}"><a href="{{route('table-orders')}}">Заказы</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+        </nav>
 
-    <div class="container" style="margin-top: 30px">
-        <div class="page-header">
-            <h1>{{ $title }}</h1>
+        <div class="container" style="margin-top: 30px">
+            <div class="page-header">
+                <h1>{{ $title }}</h1>
+            </div>
+            @yield('content')
         </div>
-        @yield('content')
     </div>
 </body>
 </html>

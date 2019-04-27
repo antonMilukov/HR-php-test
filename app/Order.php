@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Eloquent;
+namespace App;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,12 +20,12 @@ class Order extends Model
 
     public function partner()
     {
-        return $this->hasOne('App\Eloquent\Partner', 'id', 'partner_id');
+        return $this->hasOne('App\Partner', 'id', 'partner_id');
     }
 
     public function order_products()
     {
-        return $this->hasMany('App\Eloquent\OrderProduct', 'order_id', 'id');
+        return $this->hasMany('App\OrderProduct', 'order_id', 'id');
     }
 
     public function getSumAttribute()
