@@ -25,7 +25,7 @@ class Controller extends BaseController
      */
     public function index()
     {
-        return view('index')->with(['title' => 'Главная страница']);
+        return view('index')->with(['title' => 'О задании']);
     }
 
     /**
