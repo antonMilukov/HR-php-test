@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+{{--    @todo vuejs validation--}}
     <order-form inline-template :input="{{ isset($inputAsJson) ? $inputAsJson : json_encode([]) }}">
         <div class="row">
             <form action="{{ $action }}" method="post" class="form-horizontal">
@@ -36,16 +37,40 @@
                                     <tr>
                                         <th>название</th>
                                         <th>кол-во</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template v-for="product in formData.products">
+{{--                                @todo контролы: удаление и добавление--}}
+                                    <template v-for="orderProduct in formData.products.current">
                                         <tr>
                                             <td>
-                                                @{{ product.name }}
-                                                <input type="hidden" v-model="product.product_id" :name="'products['+product.product_id+'][product_id]'">
+                                                @{{ orderProduct.name }}
+                                                <input type="hidden" v-model="orderProduct.id" :name="'products[current]['+orderProduct.id+'][id]'">
+                                                <input type="hidden" v-model="orderProduct.product_id" :name="'products[current]['+orderProduct.id+'][product_id]'">
                                             </td>
-                                            <td><input v-model="product.quantity" :name="'products['+product.product_id+'][quantity]'" type="number" min="0" class="form-control"></td>
+                                            <td><input v-model="orderProduct.quantity" :name="'products[current]['+orderProduct.id+'][quantity]'" type="number" min="1" class="form-control"></td>
+                                            <td>
+                                                <button @click="removeProduct(formData.products.current, 'id', orderProduct.id)" type="button" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </template>
+
+{{--                                    products list for add--}}
+                                    <template v-for="orderProduct in formData.products.for_add">
+                                        <tr>
+                                            <td>
+                                                @{{ orderProduct.name }}
+                                                <input type="hidden" v-model="orderProduct.product_id" :name="'products[for_add]['+orderProduct.product_id+'][product_id]'">
+                                            </td>
+                                            <td><input v-model="orderProduct.quantity" :name="'products[for_add]['+orderProduct.product_id+'][quantity]'" type="number" min="1" class="form-control"></td>
+                                            <td>
+                                                <button @click="removeProduct(formData.products.for_add, 'product_id', orderProduct.product_id)" type="button" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                </button>
+                                            </td>
                                         </tr>
                                     </template>
                                 </tbody>

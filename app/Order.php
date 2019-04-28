@@ -3,9 +3,17 @@
 namespace App;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Model;
+use MongoDB\Driver\Query;
 
 class Order extends Model
 {
+
+    protected $guarded = ['id'];
+    protected $fillable = [
+        'status',
+        'client_email',
+        'partner_id'
+    ];
     public static function getInstance()
     {
         return new self();
@@ -70,5 +78,10 @@ class Order extends Model
             $r = self::$statusData[$this->status][self::ALIAS_TITLE];
         }
         return $r;
+    }
+
+    public function scopeWithRelations($builder)
+    {
+        return $builder->with(['partner', 'order_products', 'order_products.product']);
     }
 }

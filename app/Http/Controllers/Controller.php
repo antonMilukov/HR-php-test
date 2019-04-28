@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderFormSave;
 use App\Order;
+use App\OrderProduct;
 use App\Partner;
+use App\Product;
 use \Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -37,7 +39,7 @@ class Controller extends BaseController
 
     public function orderForm(Request $request)
     {
-        $order = Order::where('id', $request->orderId)->with(['partner', 'order_products', 'order_products.product'])->firstOrFail();
+        $order = Order::where('id', $request->orderId)->withRelations()->firstOrFail();
         $partners = Partner::all();
 
         $inputAsJson = $this->getInputAsJson($order);
@@ -53,7 +55,11 @@ class Controller extends BaseController
 
     public function orderFormSave(OrderFormSave $request)
     {
-        dd($request->all());
+        $order = Order::where('id', $request->orderId)->withRelations()->firstOrFail();
+        $this->saveOrder($order, $request);
+        $this->syncOrderProducts($order, $request->products);
+
+        return redirect()->route('order-form', ['orderId' => $order->id]);
     }
 
     private function getInputAsJson(Order $order)
@@ -68,7 +74,8 @@ class Controller extends BaseController
                 'product_id' => $productId,
                 'name' => $orderProduct->product->name,
                 'quantity' => $isErrorExist ? $oldProducts[$productId]['quantity'] : $orderProduct->quantity,
-                'price' => $orderProduct->price
+                'price' => $orderProduct->price,
+                'id' => $orderProduct->id
             ];
         }
 
@@ -76,8 +83,59 @@ class Controller extends BaseController
             'partner_id' => ($isErrorExist) ? old('partner_id') : $order->partner_id,
             'client_email' => ($isErrorExist) ? old('client_email') : $order->client_email,
             'status' => ($isErrorExist) ? old('status') : $order->status,
-            'products' => $orderProducts
+            'products' => [
+                'current' => $orderProducts,
+                'for_add' => [
+                    [
+                        'product_id' => 3,
+                        'name' => 'product#3',
+                        'quantity' => 1,
+                        'price' => 100,
+                    ]
+                ]
+            ]
         ]);
         return $r;
+    }
+
+    private function saveOrder(Order $order, OrderFormSave $request)
+    {
+        $order->fill($request->all());
+        $order->save();
+    }
+
+    /**
+     * @param Order $order
+     * @param $arrSrc
+     */
+    private function syncOrderProducts(Order $order, $arrSrc)
+    {
+        $requestProducts = isset($arrSrc['current']) ? $arrSrc['current'] : [];
+        $requestProductIds = array_keys($requestProducts);
+        foreach ($order->order_products as $model){
+            if (in_array($model->id, $requestProductIds)){
+                $model->fill($requestProducts[$model->id]);
+                $model->save();
+            } else {
+                $model->delete();
+            }
+        }
+
+        $requestProductsForAdd = isset($arrSrc['for_add']) ? $arrSrc['for_add'] : [];
+
+        if (!empty($requestProductsForAdd)){
+            $productIds = [];
+            foreach ($requestProductsForAdd as $data){
+                $productIds []= $data['product_id'];
+            }
+            $products = Product::whereIn('id', $productIds)->get();
+            foreach ($products as $product){
+                $attrs = array_merge($requestProductsForAdd[$product->id], [
+                    'price' => $product->price
+                ]);
+                $order->order_products()->create($attrs);
+            }
+        }
+
     }
 }

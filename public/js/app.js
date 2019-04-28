@@ -1636,7 +1636,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             formData: {
                 partner_id: '',
-                products: [],
+                products: {
+                    for_add: [{
+                        'product_id': 3,
+                        'name': 'product#3',
+                        'quantity': '1',
+                        'price': '100'
+                    }]
+                },
                 client_email: '',
                 status: ''
             }
@@ -1652,14 +1659,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 });
             }
+        },
+        removeProduct: function removeProduct(src, alias, val) {
+            var self = this;
+            _.forEach(src, function (product, key) {
+                if (product[alias] == val) {
+                    console.log('Y', product);
+                    self.$nextTick(function () {
+                        src.splice(key, 1);
+                    });
+                }
+            });
         }
     },
     computed: {
         sum: function sum() {
             var self = this;
             var r = 0;
-            _.forEach(self.formData.products, function (product) {
-                r += product.quantity * product.price;
+            _.forEach(self.formData.products, function (container) {
+                _.forEach(container, function (product) {
+                    r += product.quantity * product.price;
+                });
             });
             return r;
         }

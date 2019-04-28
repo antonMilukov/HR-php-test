@@ -13,7 +13,10 @@
             return {
                 formData: {
                     partner_id: '',
-                    products: [],
+                    products: {
+                        current: [],
+                        for_add: []
+                    },
                     client_email: '',
                     status: '',
                 }
@@ -29,14 +32,27 @@
                         }
                     });
                 }
+            },
+            removeProduct: function (src, alias, val) {
+                var self = this;
+                _.forEach(src, function (product, key) {
+                    if (product[alias] == val){
+                        console.log('Y', product);
+                        self.$nextTick(function () {
+                            src.splice(key, 1);
+                        });
+                    }
+                });
             }
         },
         computed: {
             sum: function () {
                 var self = this;
                 var r = 0;
-                _.forEach(self.formData.products, function (product) {
-                    r += product.quantity * product.price;
+                _.forEach(self.formData.products, function (container) {
+                    _.forEach(container, function (product) {
+                        r += product.quantity * product.price;
+                    });
                 });
                 return r;
             }
