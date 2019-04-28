@@ -1,5 +1,9 @@
 <script>
+    import Selectize from 'vue2-selectize'
     export default {
+        components: {
+            Selectize
+        },
         mounted() {
             console.log('Order-form mounted.');
         },
@@ -7,10 +11,13 @@
             var self = this;
             console.log('created input is: ', this.input);
             self.initFormData();
+            self.initInternalData();
         },
         props: ['input'],
         data: function () {
             return {
+                selected: 1,
+                settings: {},
                 formData: {
                     partner_id: '',
                     products: {
@@ -22,12 +29,7 @@
                 },
                 internal: {
                     product_src: [],
-                    product_to_add: {
-                        'product_id': '1',
-                        'name': 'product#1',
-                        'quantity': 1,
-                        'price': 100,
-                    }
+                    product_selected: ''
                 }
             }
         },
@@ -42,6 +44,18 @@
                     });
                 }
             },
+            initInternalData: function(){
+                var self = this;
+                if (self.input){
+                    _.forEach(self.internal, function (val, key) {
+                        if (key in self.input){
+                            self.internal[key] = self.input[key];
+                        }
+                    });
+                }
+                console.log('X', self.internal);
+            },
+
             removeProduct: function (src, alias, val) {
                 var self = this;
                 _.forEach(src, function (product, key) {
@@ -56,10 +70,16 @@
 
             addProduct: function (){
                 var self = this;
-                var productToAdd = self.internal.product_to_add;
-                var isExistInContainer = _.find(self.formData.products.for_add, {'product_id': productToAdd.product_id});
-                if ( productToAdd && !isExistInContainer ){
-                    self.formData.products.for_add.push(productToAdd);
+                if (self.internal.product_selected){
+                    self.$nextTick(function () {
+                        var productToAdd = _.find(self.internal.product_src, function (o) {
+                            return o.product_id == self.internal.product_selected;
+                        });
+                        var isExistInContainer = _.find(self.formData.products.for_add, {'product_id': productToAdd.product_id});
+                        if ( productToAdd && !isExistInContainer ){
+                            self.formData.products.for_add.push(productToAdd);
+                        }
+                    });
                 }
             },
 

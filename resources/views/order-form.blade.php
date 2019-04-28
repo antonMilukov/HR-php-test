@@ -29,14 +29,26 @@
 
                 <div class="form-group">
                     <div class="col-md-4">
-                        <label class="control-label">продукты</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="control-label">продукты</label>
+                            </div>
 
-                        <button @click="addProduct()" type="button" class="btn btn-default">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        </button>
+                            <div class="col-md-6">
+                                <selectize v-model="internal.product_selected" :settings="settings">
+                                    <option disabled selected value>Выберите значение</option>
+                                    <template v-for="product in internal.product_src" >
+                                        <option :value="product.product_id">@{{ product.name }}</option>
+                                    </template>
+                                </selectize>
+                            </div>
 
-                        <hr style="margin-top: 2px">
-
+                            <div class="col-md-2">
+                                <button @click="addProduct()" type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
                         <div class="row col-md-offset-1">
                             <table class="table">
                                 <thead>

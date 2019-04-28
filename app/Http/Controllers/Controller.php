@@ -82,21 +82,25 @@ class Controller extends BaseController
             ];
         }
 
+        $allProducts = [];
+        foreach (Product::all() as $product){
+            $allProducts []= [
+                'product_id' => $product->id,
+                'name' => $product->name,
+                'quantity' => 1,
+                'price' => $product->price,
+            ];
+        }
+
         $r = json_encode([
             'partner_id' => ($isErrorExist) ? old('partner_id') : $order->partner_id,
             'client_email' => ($isErrorExist) ? old('client_email') : $order->client_email,
             'status' => ($isErrorExist) ? old('status') : $order->status,
             'products' => [
                 'current' => $orderProducts,
-                'for_add' => [
-//                    [
-//                        'product_id' => 3,
-//                        'name' => 'product#3',
-//                        'quantity' => 1,
-//                        'price' => 100,
-//                    ]
-                ]
-            ]
+                'for_add' => []
+            ],
+            'product_src' => $allProducts
         ]);
         return $r;
     }
