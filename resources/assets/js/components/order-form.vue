@@ -9,7 +9,6 @@
         },
         created: function(){
             var self = this;
-            console.log('created input is: ', this.input);
             self.initFormData();
             self.initInternalData();
         },
@@ -88,19 +87,22 @@
             submitForm: function () {
                 var self = this;
                 var action = self.$refs['form'].action;
-                self.internal.isActiveForm = false;
-
-                // @todo validation
-                apiForm.formSubmit(action, self.formData).then(function (response) {
-                    if (response.status == 200 && 'redirect' in response.data){
-                        window.location.href = response.data.redirect;
-                    } else {
-                        self.internal.isActiveForm = true;
+                self.$validator.validateAll().then((result) => {
+                    if (result) {
+                        self.internal.isActiveForm = false;
+                        apiForm.formSubmit(action, self.formData).then(function (response) {
+                            if (response.status == 200 && 'redirect' in response.data){
+                                window.location.href = response.data.redirect;
+                            } else {
+                                self.internal.isActiveForm = true;
+                            }
+                        }).catch(function (e) {
+                            console.error('form save error:', e);
+                            self.internal.isActiveForm = true;
+                        })
                     }
-                }).catch(function (e) {
-                    console.error('form save error:', e);
-                    self.internal.isActiveForm = true;
-                })
+                });
+
 
             }
         },

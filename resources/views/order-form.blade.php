@@ -10,7 +10,7 @@
                     <div class="col-md-4">
                         <label class="control-label" for="input1">email_клиента <span class="required-mark">*</span></label>
                         @php $error = $errors->has('client_email') ? 'error' : ''; @endphp
-                        <input v-model="formData.client_email" type="email" class="form-control {{ $error }}" id="input1" name="client_email">
+                        <input v-model="formData.client_email" v-validate="'required|email'" type="email" class="form-control {{ $error }}" id="input1" name="client_email">
                     </div>
                 </div>
 
@@ -18,7 +18,7 @@
                     <div class="col-md-4">
                         <label class="control-label" for="input1">партнер <span class="required-mark">*</span></label>
                         @php $error = $errors->has('partner_id') ? 'error' : ''; @endphp
-                        <select name="partner_id" v-model="formData.partner_id" class="form-control {{ $error }}">
+                        <select name="partner_id" v-model="formData.partner_id" v-validate="'required'" class="form-control {{ $error }}">
                             <option disabled selected value>Выберите значение</option>
                             @foreach($partners as $partner)
                                 <option value="{{ $partner->id }}">{{ $partner->name }}</option>
@@ -59,7 +59,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-{{--                                @todo контролы: удаление и добавление--}}
+{{--                                    products in order--}}
                                     <template v-for="orderProduct in formData.products.current">
                                         <tr>
                                             <td>
@@ -101,7 +101,7 @@
                     <div class="col-md-4">
                         <label class="control-label" for="input1">статус заказа <span class="required-mark">*</span></label>
                         @php $error = $errors->has('status') ? 'error' : ''; @endphp
-                        <select name="status" v-model="formData.status" class="form-control {{ $error }}">
+                        <select name="status" v-model="formData.status" v-validate="'required'" class="form-control {{ $error }}">
                             <option disabled selected value>Выберите значение</option>
                             @foreach(\App\Order::$statusData as $statusId => $data)
                                 <option value="{{ $statusId }}">{{ $data[\App\Order::ALIAS_TITLE] }}</option>
