@@ -30,6 +30,7 @@
 
         <div class="container" style="margin-top: 30px">
             <div class="page-header">
+                @include('components.breadcrumbs')
                 <h1>{{ $title }}</h1>
             </div>
             @yield('content')
