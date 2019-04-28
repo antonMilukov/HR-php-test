@@ -29,7 +29,13 @@
 
                 <div class="form-group">
                     <div class="col-md-4">
-                        <label class="control-label">продукты</label><hr style="margin-top: 2px">
+                        <label class="control-label">продукты</label>
+
+                        <button @click="addProduct()" type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+
+                        <hr style="margin-top: 2px">
 
                         <div class="row col-md-offset-1">
                             <table class="table">

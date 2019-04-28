@@ -19,6 +19,15 @@
                     },
                     client_email: '',
                     status: '',
+                },
+                internal: {
+                    product_src: [],
+                    product_to_add: {
+                        'product_id': '1',
+                        'name': 'product#1',
+                        'quantity': 1,
+                        'price': 100,
+                    }
                 }
             }
         },
@@ -44,6 +53,16 @@
                     }
                 });
             },
+
+            addProduct: function (){
+                var self = this;
+                var productToAdd = self.internal.product_to_add;
+                var isExistInContainer = _.find(self.formData.products.for_add, {'product_id': productToAdd.product_id});
+                if ( productToAdd && !isExistInContainer ){
+                    self.formData.products.for_add.push(productToAdd);
+                }
+            },
+
             submitForm: function () {
                 var self = this;
                 var action = self.$refs['form'].action;
