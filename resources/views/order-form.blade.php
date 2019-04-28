@@ -3,7 +3,7 @@
 {{--    @todo vuejs validation--}}
     <order-form inline-template :input="{{ isset($inputAsJson) ? $inputAsJson : json_encode([]) }}">
         <div class="row">
-            <form action="{{ $action }}" method="post" class="form-horizontal">
+            <form action="{{ $action }}" method="post" class="form-horizontal" @submit.prevent="submitForm" ref="form">
                 {{ csrf_field() }}
 
                 <div class="form-group">

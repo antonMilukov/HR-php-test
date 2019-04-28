@@ -59,7 +59,10 @@ class Controller extends BaseController
         $this->saveOrder($order, $request);
         $this->syncOrderProducts($order, $request->products);
 
-        return redirect()->route('order-form', ['orderId' => $order->id]);
+        return response()->json([
+            'success' => true,
+            'redirect' => route('table-orders')
+        ]);
     }
 
     private function getInputAsJson(Order $order)
@@ -86,12 +89,12 @@ class Controller extends BaseController
             'products' => [
                 'current' => $orderProducts,
                 'for_add' => [
-                    [
-                        'product_id' => 3,
-                        'name' => 'product#3',
-                        'quantity' => 1,
-                        'price' => 100,
-                    ]
+//                    [
+//                        'product_id' => 3,
+//                        'name' => 'product#3',
+//                        'quantity' => 1,
+//                        'price' => 100,
+//                    ]
                 ]
             ]
         ]);
@@ -110,32 +113,47 @@ class Controller extends BaseController
      */
     private function syncOrderProducts(Order $order, $arrSrc)
     {
-        $requestProducts = isset($arrSrc['current']) ? $arrSrc['current'] : [];
-        $requestProductIds = array_keys($requestProducts);
+        $requestOrderProducts = isset($arrSrc['current']) ? $arrSrc['current'] : [];
+        $requestOrderProductIds = array_map(function ($product){
+            return $product['id'];
+        }, $requestOrderProducts);
+
         foreach ($order->order_products as $model){
-            if (in_array($model->id, $requestProductIds)){
-                $model->fill($requestProducts[$model->id]);
+            if (in_array($model->id, $requestOrderProductIds)){
+                $input = self::getFromArrayByValue($requestOrderProducts, 'id', $model->id);
+                $model->fill($input);
                 $model->save();
             } else {
                 $model->delete();
             }
         }
 
-        $requestProductsForAdd = isset($arrSrc['for_add']) ? $arrSrc['for_add'] : [];
-
-        if (!empty($requestProductsForAdd)){
+        $requestOrderProductsForAdd = isset($arrSrc['for_add']) ? $arrSrc['for_add'] : [];
+        if (!empty($requestOrderProductsForAdd)){
             $productIds = [];
-            foreach ($requestProductsForAdd as $data){
+            foreach ($requestOrderProductsForAdd as $data){
                 $productIds []= $data['product_id'];
             }
             $products = Product::whereIn('id', $productIds)->get();
             foreach ($products as $product){
-                $attrs = array_merge($requestProductsForAdd[$product->id], [
+                $input = self::getFromArrayByValue($requestOrderProductsForAdd, 'product_id', $product->id);
+                $attrs = array_merge($input, [
                     'price' => $product->price
                 ]);
                 $order->order_products()->create($attrs);
             }
         }
 
+    }
+
+    private static function getFromArrayByValue($src, $alias, $val)
+    {
+        $r = null;
+        foreach ($src as $data){
+            if (is_null($r) && $data[$alias] == $val){
+                $r = $data;
+            }
+        }
+        return $r;
     }
 }

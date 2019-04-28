@@ -43,6 +43,18 @@
                         });
                     }
                 });
+            },
+            submitForm: function () {
+                var self = this;
+                var action = self.$refs['form'].action;
+
+                // @todo validation
+                apiForm.formSubmit(action, self.formData).then(function (response) {
+                    if (response.status == 200 && 'redirect' in response.data){
+                        window.location.href = response.data.redirect;
+                    }
+                });
+
             }
         },
         computed: {
@@ -58,4 +70,10 @@
             }
         }
     }
+
+    var apiForm = {
+        formSubmit: function (action, formData) {
+            return axios.post(action, formData);
+        }
+    };
 </script>

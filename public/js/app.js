@@ -1637,12 +1637,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             formData: {
                 partner_id: '',
                 products: {
-                    for_add: [{
-                        'product_id': 3,
-                        'name': 'product#3',
-                        'quantity': '1',
-                        'price': '100'
-                    }]
+                    current: [],
+                    for_add: []
                 },
                 client_email: '',
                 status: ''
@@ -1670,6 +1666,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     });
                 }
             });
+        },
+        submitForm: function submitForm() {
+            var self = this;
+            var action = self.$refs['form'].action;
+
+            // @todo validation
+            apiForm.formSubmit(action, self.formData).then(function (response) {
+                if (response.status == 200 && 'redirect' in response.data) {
+                    window.location.href = response.data.redirect;
+                }
+            });
         }
     },
     computed: {
@@ -1685,6 +1692,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     }
 });
+
+var apiForm = {
+    formSubmit: function formSubmit(action, formData) {
+        return axios.post(action, formData);
+    }
+};
 
 /***/ }),
 
