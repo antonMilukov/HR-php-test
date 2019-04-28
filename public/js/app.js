@@ -1641,7 +1641,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: ['input'],
     data: function data() {
         return {
-            selected: 1,
             settings: {},
             formData: {
                 partner_id: '',
@@ -1654,7 +1653,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             internal: {
                 product_src: [],
-                product_selected: ''
+                product_selected: '',
+                selectize: {
+                    settings: {}
+                },
+                isActiveForm: true
             }
         };
     },
@@ -1711,12 +1714,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submitForm: function submitForm() {
             var self = this;
             var action = self.$refs['form'].action;
+            self.internal.isActiveForm = false;
 
             // @todo validation
             apiForm.formSubmit(action, self.formData).then(function (response) {
                 if (response.status == 200 && 'redirect' in response.data) {
                     window.location.href = response.data.redirect;
+                } else {
+                    self.internal.isActiveForm = true;
                 }
+            }).catch(function (e) {
+                console.error('form save error:', e);
+                self.internal.isActiveForm = true;
             });
         }
     },

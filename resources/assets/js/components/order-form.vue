@@ -16,7 +16,6 @@
         props: ['input'],
         data: function () {
             return {
-                selected: 1,
                 settings: {},
                 formData: {
                     partner_id: '',
@@ -29,8 +28,12 @@
                 },
                 internal: {
                     product_src: [],
-                    product_selected: ''
-                }
+                    product_selected: '',
+                    selectize: {
+                        settings: {}
+                    },
+                    isActiveForm: true
+                },
             }
         },
         methods: {
@@ -53,7 +56,6 @@
                         }
                     });
                 }
-                console.log('X', self.internal);
             },
 
             removeProduct: function (src, alias, val) {
@@ -86,13 +88,19 @@
             submitForm: function () {
                 var self = this;
                 var action = self.$refs['form'].action;
+                self.internal.isActiveForm = false;
 
                 // @todo validation
                 apiForm.formSubmit(action, self.formData).then(function (response) {
                     if (response.status == 200 && 'redirect' in response.data){
                         window.location.href = response.data.redirect;
+                    } else {
+                        self.internal.isActiveForm = true;
                     }
-                });
+                }).catch(function (e) {
+                    console.error('form save error:', e);
+                    self.internal.isActiveForm = true;
+                })
 
             }
         },

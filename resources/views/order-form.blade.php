@@ -35,7 +35,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <selectize v-model="internal.product_selected" :settings="settings">
+                                <selectize v-model="internal.product_selected" :settings="internal.selectize.settings">
                                     <option disabled selected value>Выберите значение</option>
                                     <template v-for="product in internal.product_src" >
                                         <option :value="product.product_id">@{{ product.name }}</option>
@@ -119,7 +119,7 @@
 
                 <div class="form-group">
                     <div class="col-md-4">
-                        <input type="submit" value="сохранение изменений в заказе" class="btn btn-default">
+                        <input :disabled="!internal.isActiveForm" type="submit" value="сохранение изменений в заказе" class="btn btn-default">
                     </div>
                 </div>
             </form>
