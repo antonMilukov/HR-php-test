@@ -15,6 +15,10 @@ class OrderProduct extends Model
         'price',
     ];
 
+    /**
+     * Relationship
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function product()
     {
         return $this->hasOne('App\Product', 'id', 'product_id');

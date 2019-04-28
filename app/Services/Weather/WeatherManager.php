@@ -7,11 +7,20 @@ class WeatherManager {
 
     protected $service;
 
+    /**
+     *
+     * WeatherManager constructor.
+     * @param WeatherInterface|null $service
+     */
     public function __construct(WeatherInterface $service = null)
     {
         $this->setService($service);
     }
 
+    /**
+     * Set adapter
+     * @param WeatherInterface|null $service
+     */
     public function setService(WeatherInterface $service = null)
     {
         if (is_null($service)){
@@ -21,6 +30,7 @@ class WeatherManager {
     }
 
     /**
+     * Return response from adapter
      * @return Weather
      */
     public function getWeatherData()

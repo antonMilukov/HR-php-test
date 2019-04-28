@@ -19,11 +19,19 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /**
+     * Main page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         return view('index')->with(['title' => 'Главная страница']);
     }
 
+    /**
+     * Temperature page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function temp()
     {
         $manager = new WeatherManager();
@@ -31,12 +39,21 @@ class Controller extends BaseController
         return view('temp')->with(['title' => 'Температура в Брянске', 'weatherEntity' => $weatherEntity]);
     }
 
+    /**
+     *  Orders list page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function tableOrders()
     {
         $orders = Order::getForOrderList();
         return view('table-orders')->with(['title' => 'Список заказов', 'orders' => $orders]);
     }
 
+    /**
+     * Order editor page
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function orderForm(Request $request)
     {
         $order = Order::where('id', $request->orderId)->withRelations()->firstOrFail();
@@ -54,6 +71,11 @@ class Controller extends BaseController
         ]);
     }
 
+    /**
+     * Ajax save order page
+     * @param OrderFormSave $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function orderFormSave(OrderFormSave $request)
     {
         $order = Order::where('id', $request->orderId)->withRelations()->firstOrFail();
@@ -66,6 +88,12 @@ class Controller extends BaseController
         ]);
     }
 
+    /**
+     * Method with data for "Order editor page"
+     * - collect all data for frontend processing
+     * @param Order $order
+     * @return false|string
+     */
     private function getInputAsJson(Order $order)
     {
         $isErrorExist = !empty(Session::get('errors'));
@@ -106,6 +134,11 @@ class Controller extends BaseController
         return $r;
     }
 
+    /**
+     *  Method for save order
+     * @param Order $order
+     * @param OrderFormSave $request
+     */
     private function saveOrder(Order $order, OrderFormSave $request)
     {
         $order->fill($request->all());
@@ -113,6 +146,7 @@ class Controller extends BaseController
     }
 
     /**
+     * Method for syncronizing order products in order_products table
      * @param Order $order
      * @param $arrSrc
      */
@@ -151,6 +185,13 @@ class Controller extends BaseController
 
     }
 
+    /**
+     * Method for getting target array from container array by sender value
+     * @param $src
+     * @param $alias
+     * @param $val
+     * @return array|null
+     */
     private static function getFromArrayByValue($src, $alias, $val)
     {
         $r = null;

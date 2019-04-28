@@ -5,10 +5,16 @@ use App\Entities\Weather;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Adapter for yandex api - weather
+ * Class WeatherAdapterYandex
+ * @package App\Services\Weather\Adapters
+ */
 class WeatherAdapterYandex implements WeatherInterface {
 
     /**
      * @return Weather
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getWeatherData()
     {
@@ -19,6 +25,12 @@ class WeatherAdapterYandex implements WeatherInterface {
         return new Weather($input);
     }
 
+    /**
+     * Method as controller between cache and request to api
+     * - return new or cached data from api
+     * @return mixed|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     protected function getData()
     {
         $endpoint = $cacheKey = "https://api.weather.yandex.ru/v1/informers/?lat=53.270955&lon=34.360938";
@@ -38,6 +50,12 @@ class WeatherAdapterYandex implements WeatherInterface {
         return $r;
     }
 
+    /**
+     * Method for request data from api
+     * @param $endpoint
+     * @return string|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     protected function getRequestData($endpoint)
     {
         $client = new Client();

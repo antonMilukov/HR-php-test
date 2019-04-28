@@ -2,6 +2,12 @@
 
 namespace App\Entities;
 
+/**
+ * Weather model entity
+
+ * Class Weather
+ * @package App\Entities
+ */
 class Weather {
 
     public function __construct(array $input)
@@ -13,5 +19,9 @@ class Weather {
         }
     }
 
+    /**
+     * Temperature in celsius
+     * @var
+     */
     public $temp;
 }
